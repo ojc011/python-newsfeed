@@ -1,4 +1,4 @@
-from app.models import User, Post
+from app.models import User, Post, Comment
 from app.db import Session, Base, engine
 
 
@@ -17,7 +17,7 @@ db.add_all([ # preps SQL queries
   User(username='djiri4', email='gmidgley4@weather.com', password='password123')
 ])
 
-db.commit() #INSTERT statements into db
+db.commit() #INSTERT statement into db
 
 # inserts posts
 db.add_all([ #preps SQL queries
@@ -28,6 +28,17 @@ db.add_all([ #preps SQL queries
   Post(title='Pellentesque eget nunc', post_url='http://google.ca/nam/nulla/integer.aspx', user_id=4)
 ])
 
-db.commit() #INSERT statements into db
+db.commit() #INSERT statement into db
+
+# insert comments
+db.add_all([ #preps SQL queries
+  Comment(comment_text='Nunc rhoncus dui vel sem.', user_id=1, post_id=2),
+  Comment(comment_text='Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est.', user_id=1, post_id=3),
+  Comment(comment_text='Aliquam erat volutpat. In congue.', user_id=2, post_id=1),
+  Comment(comment_text='Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam.', user_id=2, post_id=3),
+  Comment(comment_text='In hac habitasse platea dictumst.', user_id=3, post_id=3)
+])
+
+db.commit() #INSERT statement into db
 
 db.close() #closes session connection
