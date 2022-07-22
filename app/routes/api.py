@@ -1,6 +1,6 @@
 import sys
 from flask import Blueprint, request, jsonify, session
-from app.models import User
+from app.models import User, Post, Comment, Vote
 from app.db import get_db
 
 bp = Blueprint('api', __name__, url_prefix='/api')
@@ -56,3 +56,25 @@ def login():
   session['loggedIn'] = True
   
   return jsonify(id = user.id)
+
+@bp.route('/comments', methods=['POST']) #First step of connecting to db
+def comment():
+  data = request.get_json()
+  db = get_db()
+  try:
+  # create a new comment
+    newComment = Comment(
+    comment_text = data['comment_text'],
+    post_id = data['post_id'],
+    user_id = session.get('user_id')
+  )
+
+    db.add(newComment) # preps db for inserting
+    db.commit() # officially adds to db
+  except:
+    print(sys.exc_info()[0])
+
+    db.rollback() # discards pending commit if it fails
+    return jsonify(message = 'Comment failed'), 500
+  
+  return jsonify(id = newComment.id)
